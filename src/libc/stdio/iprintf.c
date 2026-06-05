@@ -1,11 +1,15 @@
 /*
- * Integer-family printf wrappers.
+ * Integer-profile printf wrappers.
  *
- * This file is the real home of the iprintf-family public wrappers.
+ * The FILE route is intentionally the same shape as the default printf family:
+ *
+ *   iprintf  -> vfiprintf(stdout, ...)
+ *   fiprintf -> vfiprintf(stream, ...)
+ *   vfiprintf -> __printf_file_route(..., __printf_core_integer)
  */
 
-#include "printf/__printf_stream_api.h"
-#include "printf/__printf_string_api.h"
+#include "printf/core/printf_file.h"
+#include "printf/core/printf_buffer.h"
 
 int
 iprintf(const char *fmt, ...)
@@ -14,7 +18,7 @@ iprintf(const char *fmt, ...)
     int i;
 
     va_start(ap, fmt);
-    i = __printf_vformat_stream_int(stdout, fmt, ap);
+    i = vfiprintf(stdout, fmt, ap);
     va_end(ap);
     return i;
 }
@@ -22,7 +26,7 @@ iprintf(const char *fmt, ...)
 int
 viprintf(const char *fmt, va_list ap)
 {
-    return __printf_vformat_stream_int(stdout, fmt, ap);
+    return vfiprintf(stdout, fmt, ap);
 }
 
 int
@@ -32,7 +36,7 @@ fiprintf(FILE *stream, const char *fmt, ...)
     int i;
 
     va_start(ap, fmt);
-    i = __printf_vformat_stream_int(stream, fmt, ap);
+    i = vfiprintf(stream, fmt, ap);
     va_end(ap);
     return i;
 }
@@ -40,7 +44,7 @@ fiprintf(FILE *stream, const char *fmt, ...)
 int
 vfiprintf(FILE *stream, const char *fmt, va_list ap)
 {
-    return __printf_vformat_stream_int(stream, fmt, ap);
+    return __printf_file_route(stream, fmt, ap, __printf_core_integer);
 }
 
 int
@@ -50,7 +54,7 @@ siprintf(char *s, const char *fmt, ...)
     int i;
 
     va_start(ap, fmt);
-    i = __printf_vformat_cstr(s, fmt, ap, __printf_core_integer);
+    i = __printf_buffer_route(s, fmt, ap, __printf_core_integer);
     va_end(ap);
     return i;
 }
@@ -58,5 +62,5 @@ siprintf(char *s, const char *fmt, ...)
 int
 vsiprintf(char *s, const char *fmt, va_list ap)
 {
-    return __printf_vformat_cstr(s, fmt, ap, __printf_core_integer);
+    return __printf_buffer_route(s, fmt, ap, __printf_core_integer);
 }

@@ -13,7 +13,7 @@ printf(const char *fmt, ...)
     int i;
 
     va_start(ap, fmt);
-    i = vprintf(fmt, ap);
+    i = vfprintf(stdout, fmt, ap);
     va_end(ap);
 
     return i;

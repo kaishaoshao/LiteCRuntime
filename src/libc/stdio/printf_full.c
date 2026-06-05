@@ -1,12 +1,16 @@
 /*
  * Full-profile printf wrappers.
  *
- * These public entrypoints intentionally bind to the dedicated full core
- * symbol so the default family can diverge later without changing callers.
+ * The FILE route intentionally has the same shape as the default and integer
+ * printf families:
+ *
+ *   printf_full  -> vfprintf_full(stdout, ...)
+ *   fprintf_full -> vfprintf_full(stream, ...)
+ *   vfprintf_full -> __printf_file_route(..., __printf_core_full)
  */
 
-#include "printf/__printf_stream_api.h"
-#include "printf/__printf_string_api.h"
+#include "printf/core/printf_file.h"
+#include "printf/core/printf_buffer.h"
 
 int
 printf_full(const char *fmt, ...)
@@ -15,7 +19,7 @@ printf_full(const char *fmt, ...)
     int i;
 
     va_start(ap, fmt);
-    i = __printf_vformat_stream_full(stdout, fmt, ap);
+    i = vfprintf_full(stdout, fmt, ap);
     va_end(ap);
     return i;
 }
@@ -23,7 +27,7 @@ printf_full(const char *fmt, ...)
 int
 vprintf_full(const char *fmt, va_list ap)
 {
-    return __printf_vformat_stream_full(stdout, fmt, ap);
+    return vfprintf_full(stdout, fmt, ap);
 }
 
 int
@@ -33,7 +37,7 @@ fprintf_full(FILE *stream, const char *fmt, ...)
     int i;
 
     va_start(ap, fmt);
-    i = __printf_vformat_stream_full(stream, fmt, ap);
+    i = vfprintf_full(stream, fmt, ap);
     va_end(ap);
     return i;
 }
@@ -41,7 +45,7 @@ fprintf_full(FILE *stream, const char *fmt, ...)
 int
 vfprintf_full(FILE *stream, const char *fmt, va_list ap)
 {
-    return __printf_vformat_stream_full(stream, fmt, ap);
+    return __printf_file_route(stream, fmt, ap, __printf_core_full);
 }
 
 int
@@ -51,7 +55,7 @@ sprintf_full(char *s, const char *fmt, ...)
     int i;
 
     va_start(ap, fmt);
-    i = __printf_vformat_cstr(s, fmt, ap, __printf_core_full);
+    i = __printf_buffer_route(s, fmt, ap, __printf_core_full);
     va_end(ap);
     return i;
 }
@@ -59,7 +63,7 @@ sprintf_full(char *s, const char *fmt, ...)
 int
 vsprintf_full(char *s, const char *fmt, va_list ap)
 {
-    return __printf_vformat_cstr(s, fmt, ap, __printf_core_full);
+    return __printf_buffer_route(s, fmt, ap, __printf_core_full);
 }
 
 int
@@ -69,7 +73,7 @@ snprintf_full(char *s, size_t n, const char *fmt, ...)
     int i;
 
     va_start(ap, fmt);
-    i = __printf_vformat_cstrn(s, n, fmt, ap, __printf_core_full);
+    i = __printf_buffer_route_n(s, n, fmt, ap, __printf_core_full);
     va_end(ap);
     return i;
 }
@@ -77,5 +81,5 @@ snprintf_full(char *s, size_t n, const char *fmt, ...)
 int
 vsnprintf_full(char *s, size_t n, const char *fmt, va_list ap)
 {
-    return __printf_vformat_cstrn(s, n, fmt, ap, __printf_core_full);
+    return __printf_buffer_route_n(s, n, fmt, ap, __printf_core_full);
 }

@@ -22,7 +22,7 @@ typedef uint16_t __ungetc_t;
 
 struct __file {
   __ungetc_t unget;
-  uint8_t flags;
+  uint16_t flags;
 #define __SRD 0x0001
 #define __SWR 0x0002
 #define __SERR 0x0004
@@ -31,9 +31,18 @@ struct __file {
 #define __SEXT 0x0020
 #define __SBUF 0x0040
 #define __SWIDE 0x0080
+  void *cookie;
   int (*put)(char, struct __file *);
   int (*get)(struct __file *);
+  int (*write)(const char *, size_t, struct __file *);
   int (*flush)(struct __file *);
+  int (*close)(struct __file *);
+  unsigned char *wbuf;
+  size_t wbuf_size;
+  size_t wbuf_len;
+#ifdef __STDIO_LOCKING
+  _LOCK_RECURSIVE_T lock;
+#endif
 };
 
 typedef struct __file __FILE;

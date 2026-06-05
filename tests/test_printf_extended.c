@@ -126,11 +126,11 @@ main(void)
     check_str("dynamic width precision", "[  0012]", buf);
     check_int("dynamic width precision ret", 8, ret);
 
-    ret = snprintf(buf, sizeof(buf), "%2$d/%1$d", 7, 12);
+    ret = snprintf_full(buf, sizeof(buf), "%2$d/%1$d", 7, 12);
     check_str("positional reorder", "12/7", buf);
     check_int("positional reorder ret", 4, ret);
 
-    ret = snprintf(buf, sizeof(buf), "[%2$*1$d]", 6, 12);
+    ret = snprintf_full(buf, sizeof(buf), "[%2$*1$d]", 6, 12);
     check_str("positional width", "[    12]", buf);
     check_int("positional width ret", 8, ret);
 
@@ -157,11 +157,11 @@ main(void)
     check_str("vsnprintf null string", "<(null)>", buf);
     check_int("vsnprintf null string ret", 8, ret);
 
-    ret = snprintf(buf, sizeof(buf), "%lc:%ls", L'A', wide_word);
+    ret = snprintf_full(buf, sizeof(buf), "%lc:%ls", L'A', wide_word);
     check_str("wide char string", "A:Hi", buf);
     check_int("wide char string ret", 4, ret);
 
-    ret = snprintf(buf, sizeof(buf), "<%ls>", (wchar_t *) NULL);
+    ret = snprintf_full(buf, sizeof(buf), "<%ls>", (wchar_t *) NULL);
     check_str("wide null string", "<(null)>", buf);
     check_int("wide null string ret", 8, ret);
 

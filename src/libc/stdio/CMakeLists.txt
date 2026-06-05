@@ -2,10 +2,17 @@ if(MICROCRT_BUILD_STDIO_LEGACY)
   microcrt_sources(microcrt_c
     fileops.c
     iob.c
-    printf/dtoa_engine.c
-    printf/dtox_engine.c
-    printf/ldtoa_engine.c
-    printf/ldtox_engine.c
+    printf/support/dtoa_engine.c
+    printf/support/dtox_engine.c
+    printf/support/ldtoa_engine.c
+    printf/support/ldtox_engine.c
+    printf/core/printf_out_core.c
+    printf/core/printf_buffer.c
+    printf/float/_printf_fp_core.c
+    printf/float/_printf_f.c
+    printf/float/_printf_e.c
+    printf/float/_printf_g.c
+    printf/float/_printf_a.c
     fprintf.c
     iprintf.c
     printf.c
@@ -14,8 +21,8 @@ if(MICROCRT_BUILD_STDIO_LEGACY)
     sprintf.c
     vfprintf.c
     vprintf.c
-    printf/printf_core_default.c
-    printf/printf_core_full.c
-    printf/printf_core_integer.c
+    printf/entry/printf_core_default.c
+    printf/entry/printf_core_full.c
+    printf/entry/printf_core_integer.c
   )
 endif()
